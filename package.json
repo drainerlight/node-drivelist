@@ -1,0 +1,47 @@
+{
+  "name": "node-drivelist",
+  "version": "0.0.1",
+  "description": "Drivelist with usage and mountpoint",
+  "author": "Drainerlight <wraither2612@gmail.com>",
+  "license": "UNLICENSED",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "devDependencies": {
+    "@types/node": "^18.13.0",
+    "@types/tape": "^4.13.2",
+    "@typescript-eslint/eslint-plugin": "^5.51.0",
+    "@typescript-eslint/parser": "^5.51.0",
+    "eslint": "^8.33.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.4",
+    "tape": "^5.6.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "keywords": [
+    "node-drivelist",
+    "diskusage",
+    "drivelist",
+    "node",
+    "WMIC",
+    "df",
+    "disk",
+    "usage",
+    "mountpoint",
+    "typescript"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prettier-all": "prettier --write 'src/**/*' 'tests/**/*'",
+    "test": "tape tests/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/drainerlight/node-drivelist"
+  },
+  "homepage": "https://github.com/drainerlight/node-drivelist"
+}

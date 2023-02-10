@@ -1,0 +1,9 @@
+/.npm
+/.idea
+/.vscode
+/node_modules/
+/coverage/
+/.nyc_output/
+/dist/
+/yarn-error.log
+/xunit.xml
