@@ -1,6 +1,5 @@
-const test = require("tape");
-
-const driveList = require("../dist/posix");
+import test from 'tape';
+import driveList from '../dist/posix';
 
 test("(POSIX) it parses Debian output", (assert) => {
   //'Filesystem               1K-blocks      Used Available Use% Mounted on\n'

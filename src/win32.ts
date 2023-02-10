@@ -2,7 +2,7 @@ import { exec } from "child_process";
 import { DriveDataInterface } from "./Interfaces";
 import { isNumber } from "util";
 
-const execDriveList = (cb: any) => {
+export const execDriveList = (cb: any) => {
   //Logicaldisk get order the parameters has no effect
   exec(
     "WMIC LOGICALDISK GET Name, VolumeName, Size, FreeSpace",
@@ -27,7 +27,7 @@ const execDriveList = (cb: any) => {
   );
 };
 
-const replaceStdout = (stdout: string) => {
+export const replaceStdout = (stdout: string) => {
   return stdout
     .replace(/\r\r\n/g, "\n")
     .split("\n")
@@ -36,7 +36,7 @@ const replaceStdout = (stdout: string) => {
     .map((line) => line.split(" ").filter((x) => x !== ""));
 };
 
-const parse = (line: string[]): DriveDataInterface => {
+export const parse = (line: string[]): DriveDataInterface => {
   const available = Number(line[0]);
   const mountpoint = line[1];
   const total = Number(line[2]);

@@ -1,6 +1,6 @@
 {
   "name": "node-drivelist",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Drivelist with usage and mountpoint",
   "author": "Drainerlight <wraither2612@gmail.com>",
   "license": "MIT",
@@ -37,7 +37,7 @@
   "scripts": {
     "build": "tsc",
     "prettier-all": "prettier --write 'src/**/*' 'tests/**/*'",
-    "test": "tape tests/*.js"
+    "test": "tape -r ts-node/register/transpile-only tests/*.ts"
   },
   "repository": {
     "type": "git",

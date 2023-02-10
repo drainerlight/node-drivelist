@@ -1,7 +1,7 @@
 import { execFile } from "child_process";
 import { DriveDataInterface } from "./Interfaces";
 
-const execDriveList = (cb: any) => {
+export const execDriveList = (cb: any) => {
   execFile("df", ["-P", "-k"], (err, stdout) => {
     if (err) {
       return err;
@@ -21,7 +21,7 @@ const execDriveList = (cb: any) => {
   });
 };
 
-const parse = (driveLine: string): DriveDataInterface => {
+export const parse = (driveLine: string): DriveDataInterface => {
   const matches = driveLine.match(
     /^.+\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+%)\s+([\dA-Za-z\/]*)/
   );
