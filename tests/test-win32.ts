@@ -1,5 +1,5 @@
-import test from 'tape';
-import driveList from '../dist/win32';
+import test from "tape";
+import driveList from "../dist/win32";
 
 const stdout =
   "FreeSpace     Name  Size         VolumeName \r\r\n" +

@@ -10,7 +10,7 @@ if (platform() === "win32") {
   execDriveList = require("./posix").execDriveList;
 }
 
-export const getDriveList = () => {
+export const getDriveList = (): Promise<DriveDataInterface[]> => {
   return new Promise((resolve) => {
     execDriveList(
       (
