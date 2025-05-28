@@ -18,6 +18,111 @@ test("(POSIX) it parses Debian output", (assert) => {
   assert.end();
 });
 
+test("(POSIX - macOS) it parses root mount (/) output", (assert) => {
+  const output = "/dev/disk1s1    488281248 450181248  37100000   93% /";
+  const parsed = driveList.parse(output);
+
+  assert.deepEquals(parsed, {
+    total: 1024 * 488281248,
+    used: 1024 * 450181248,
+    available: 1024 * 37100000,
+    percentageUsed: 93,
+    mountpoint: "/",
+    name: "", // .split('/').pop() for "/" is ""
+  });
+  assert.end();
+});
+
+test("(POSIX - macOS) it parses /System/Volumes/Data output", (assert) => {
+  const output = "/dev/disk1s5    488281248  10000000  37100000   22% /System/Volumes/Data";
+  const parsed = driveList.parse(output);
+
+  assert.deepEquals(parsed, {
+    total: 1024 * 488281248,
+    used: 1024 * 10000000,
+    available: 1024 * 37100000,
+    percentageUsed: 22,
+    mountpoint: "/System/Volumes/Data",
+    name: "Data",
+  });
+  assert.end();
+});
+
+test("(POSIX - macOS) it parses external drive output from /Volumes/", (assert) => {
+  const output = "/dev/disk2s2    1953125000 500000000 1453125000  26% /Volumes/MyExternalDrive";
+  const parsed = driveList.parse(output);
+
+  assert.deepEquals(parsed, {
+    total: 1024 * 1953125000,
+    used: 1024 * 500000000,
+    available: 1024 * 1453125000,
+    percentageUsed: 26,
+    mountpoint: "/Volumes/MyExternalDrive",
+    name: "MyExternalDrive",
+  });
+  assert.end();
+});
+
+test("(POSIX - macOS) it parses mountpoint with spaces", (assert) => {
+  const output = "com.apple.TimeMachine:/dev/disk3s2 976562500 200000000 776562500 21% /Volumes/Time Machine Backups";
+  const parsed = driveList.parse(output);
+
+  assert.deepEquals(parsed, {
+    total: 1024 * 976562500,
+    used: 1024 * 200000000,
+    available: 1024 * 776562500,
+    percentageUsed: 21,
+    mountpoint: "/Volumes/Time Machine Backups",
+    name: "Time Machine Backups",
+  }, "Mountpoint with spaces should be parsed correctly.");
+  assert.end();
+});
+
+test("(POSIX - macOS) it parses mountpoint with multiple spaces", (assert) => {
+  const output = "anotherfs 100000 50000 50000 50% /mnt/my cool disk";
+  const parsed = driveList.parse(output);
+
+  assert.deepEquals(parsed, {
+    total: 1024 * 100000,
+    used: 1024 * 50000,
+    available: 1024 * 50000,
+    percentageUsed: 50,
+    mountpoint: "/mnt/my cool disk",
+    name: "my cool disk",
+  });
+  assert.end();
+});
+
+test("(POSIX - macOS) it parses mountpoint with special characters", (assert) => {
+  const output = "specialfs 100000 50000 50000 50% /mnt/archive-2023!@#";
+  const parsed = driveList.parse(output);
+
+  assert.deepEquals(parsed, {
+    total: 1024 * 100000,
+    used: 1024 * 50000,
+    available: 1024 * 50000,
+    percentageUsed: 50,
+    mountpoint: "/mnt/archive-2023!@#",
+    name: "archive-2023!@#",
+  });
+  assert.end();
+});
+
+test("(POSIX - macOS) it parses APFS snapshot-like filesystem name", (assert) => {
+  const output = "com.apple.os.update-.snapshot       123456789   12345678   111111111   10% /System/Volumes/Update";
+  const parsed = driveList.parse(output);
+
+  assert.deepEquals(parsed, {
+    total: 1024 * 123456789,
+    used: 1024 * 12345678,
+    available: 1024 * 111111111,
+    percentageUsed: 10,
+    mountpoint: "/System/Volumes/Update",
+    name: "Update",
+  });
+  assert.end();
+});
+
 test("(POSIX) it parses non-ascii output", function (assert) {
   // 'Файловая система 1K-блоков Использовано Доступно Использовано% Cмонтировано в\n' +
   const output =
