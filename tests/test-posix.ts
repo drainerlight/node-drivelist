@@ -18,6 +18,39 @@ test("(POSIX) it parses Debian output", (assert) => {
   assert.end();
 });
 
+test("(POSIX) it parses line with leading and trailing whitespace", (assert) => {
+  const output = "  /dev/sda1   100   50   50   50%   /mnt/mytest  ";
+  // Note: execDriveList would trim this line before calling parse.
+  // parse itself is robust to internal spacing and trims the mountpoint.
+  const parsed = driveList.parse(output.trim()); // Simulating the trim from execDriveList
+
+  assert.deepEquals(parsed, {
+    total: 1024 * 100,
+    used: 1024 * 50,
+    available: 1024 * 50,
+    percentageUsed: 50,
+    mountpoint: "/mnt/mytest",
+    name: "mytest",
+  });
+  assert.end();
+});
+
+test("(POSIX) it parses specific problematic line with potential surrounding whitespace", (assert) => {
+  const output = "   /dev/simfs       228969916    152855096    64477156           71% /   ";
+  // Note: execDriveList would trim this line.
+  const parsed = driveList.parse(output.trim()); // Simulating the trim from execDriveList
+
+  assert.deepEquals(parsed, {
+    total: 1024 * 228969916,
+    used: 1024 * 152855096,
+    available: 1024 * 64477156,
+    percentageUsed: 71,
+    mountpoint: "/",
+    name: "",
+  });
+  assert.end();
+});
+
 test("(POSIX - macOS) it parses root mount (/) output", (assert) => {
   const output = "/dev/disk1s1    488281248 450181248  37100000   93% /";
   const parsed = driveList.parse(output);

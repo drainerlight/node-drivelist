@@ -11,7 +11,7 @@ export const execDriveList = (cb: any) => {
 
     lines.shift();
 
-    const drives = lines.map((line: string) => parse(line));
+    const drives = lines.map((line: string) => parse(line.trim()));
 
     try {
       cb(null, drives);
