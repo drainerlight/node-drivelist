@@ -26,6 +26,9 @@ npm install node-drivelist
 yarn add node-drivelist
 ```
 
+### Using Pre-compiled JavaScript
+This repository includes pre-compiled JavaScript files in the `dist` directory. If you prefer not to use TypeScript or want to use the files directly, you can find them there.
+
 ## API and Usage
 
 The library exports two main asynchronous functions: `getDriveList()` and `getDriveByName()`.
