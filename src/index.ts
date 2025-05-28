@@ -6,8 +6,10 @@ let execDriveList: any;
 
 if (platform() === "win32") {
   execDriveList = require("./win32").execDriveList;
-} else {
+} else if (platform() === "darwin" || platform() === "linux") {
   execDriveList = require("./posix").execDriveList;
+} else { // For other non-win32, non-darwin, non-linux (e.g. freebsd, sunos)
+  execDriveList = require("./posix").execDriveList; // Default to posix
 }
 
 export const getDriveList = (): Promise<DriveDataInterface[]> => {

@@ -11,7 +11,7 @@ export const execDriveList = (cb: any) => {
 
     lines.shift();
 
-    const drives = lines.map((line: string) => parse(line));
+    const drives = lines.map((line: string) => parse(line.trim()));
 
     try {
       cb(null, drives);
@@ -23,18 +23,19 @@ export const execDriveList = (cb: any) => {
 
 export const parse = (driveLine: string): DriveDataInterface => {
   const matches = driveLine.match(
-    /^.+\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+%)\s+([\dA-Za-z\/]*)/
+    /^(.+?)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+%)\s+(.+)$/
   );
 
-  if (!matches || matches.length !== 6) {
+  if (!matches || matches.length !== 7) {
     throw new Error("Unexpected df output: [" + driveLine + "]");
   }
 
-  const total = Number(matches[1]);
-  const used = Number(matches[2]);
-  const available = Number(matches[3]);
-  const percentageUsed = Number(matches[4].replace("%", ""));
-  const mountpoint = matches[5];
+  // matches[1] is the filesystem name, e.g., /dev/disk1s1 or //server/share
+  const total = Number(matches[2]);
+  const used = Number(matches[3]);
+  const available = Number(matches[4]);
+  const percentageUsed = Number(matches[5].replace("%", ""));
+  const mountpoint = matches[6].trim(); // Trim potential trailing spaces from mountpoint
   const name = mountpoint.split("/").pop();
 
   return {
