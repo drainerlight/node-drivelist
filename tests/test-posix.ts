@@ -2,7 +2,7 @@ import test from "tape";
 import driveList from "../dist/posix";
 
 test("(POSIX) it parses Debian output", (assert) => {
-  //'Filesystem               1K-blocks      Used Available Use% Mounted on\n'
+  //'Filesystem               1K-blocks      Used Available Use% Mounted on'
   const output =
     "/dev/mapper/vg0-vg0_root 468090408 320796928 123515792  73% /boot/efi";
   const parsed = driveList.parse(output);
@@ -157,9 +157,9 @@ test("(POSIX - macOS) it parses APFS snapshot-like filesystem name", (assert) =>
 });
 
 test("(POSIX) it parses non-ascii output", function (assert) {
-  // 'Файловая система 1K-блоков Использовано Доступно Использовано% Cмонтировано в\n' +
+  // 'Файловая система 1K-блоков Использовано Доступно Использовано% Cмонтировано в' +
   const output =
-    "/dev/simfs       228969916    152855096 64477156           71% /\n";
+    "/dev/simfs       228969916    152855096 64477156           71% /";
   const parsed = driveList.parse(output);
   assert.deepEquals(parsed, {
     total: 1024 * 228969916,
@@ -173,9 +173,9 @@ test("(POSIX) it parses non-ascii output", function (assert) {
 });
 
 test("(POSIX) it parses long output", function (assert) {
-  // 'Filesystem           1024-blocks    Used Available Capacity Mounted on\n' +
+  // 'Filesystem           1024-blocks    Used Available Capacity Mounted on' +
   const output =
-    "10.100.1.1:/mnt/hdd2/k8s/test-pvc-2dab28c8-d3b1-432d-bd9a-78445438618a                                                                  3844640768 1929825280 1719448576  53% /\n";
+    "10.100.1.1:/mnt/hdd2/k8s/test-pvc-2dab28c8-d3b1-432d-bd9a-78445438618a                                                                  3844640768 1929825280 1719448576  53% /";
   const parsed = driveList.parse(output);
   assert.deepEquals(parsed, {
     total: 1024 * 3844640768,
@@ -189,7 +189,7 @@ test("(POSIX) it parses long output", function (assert) {
 });
 
 test("(POSIX) it parses filesystems with spaces", function (assert) {
-  // 'Filesystem                      1024-blocks        Used  Available Capacity Mounted on\n' +
+  // 'Filesystem                      1024-blocks        Used  Available Capacity Mounted on' +
   const output =
     "//example.com/Some Storage/Test 17179803648 15080666092 2099137556      88% /mnt/test";
   const parsed = driveList.parse(output);
@@ -205,7 +205,7 @@ test("(POSIX) it parses filesystems with spaces", function (assert) {
 });
 
 test("(POSIX) it not parses if output is mallformed (II)", function (assert) {
-  //'Filesystem 1024-blocks     Used Available Capacity  iused   ifree %iused  Mounted on\n' +
+  //'Filesystem 1024-blocks     Used Available Capacity  iused   ifree %iused  Mounted on' +
   const output = "/dev/disk1   117286A12 98815836";
   try {
     driveList.parse(output);
@@ -216,9 +216,9 @@ test("(POSIX) it not parses if output is mallformed (II)", function (assert) {
 });
 
 test("(POSIX) it not parses if output is mallformed (III)", function (assert) {
-  // 'Filesystem 1024-blocks     Used Available Capacity  iused   ifree %iused  Mounted on\n' +
+  // 'Filesystem 1024-blocks     Used Available Capacity  iused   ifree %iused  Mounted on' +
   const output =
-    "/dev/disk1   117286A12 98815836  18215076    85% 24767957 4553769   84%   /\n";
+    "/dev/disk1   117286A12 98815836  18215076    85% 24767957 4553769   84%   /";
   try {
     driveList.parse(output);
   } catch (e) {
