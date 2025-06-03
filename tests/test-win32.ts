@@ -2,18 +2,18 @@ import test from "tape";
 import driveList from "../dist/win32";
 
 const stdout =
-  "FreeSpace     Name  Size         VolumeName \r\r\n" +
-  "455402688512  C:    998659936256  \r\r\n" +
-  "0             D:    606087168     \r\r\n" +
-  "              E:                  \r\r\n" +
-  "455402688512  F:    998659936256  TestName\r\r\n";
+  "C:       Windows10IoT 57615052800  5809586176\r\n" +
+  "D:       Data         69773291520 63910932480\r\n" +
+  "E:       USBSTICK      8011120640  1031307264\r\n";
 
 test("(Win32) replaceStdout", function (assert) {
   const replacedStdout = driveList.replaceStdout(stdout);
 
+  console.info("INFO =>replacedStdout", replacedStdout);
+
   assert.equals(replacedStdout.length, 3);
-  assert.equals(replacedStdout[0][0], "455402688512");
-  assert.equals(replacedStdout[2][3], "TestName");
+  assert.equals(replacedStdout[0][0], "C:");
+  assert.equals(replacedStdout[2][1], "USBSTICK");
   assert.end();
 });
 
@@ -22,12 +22,12 @@ test("(Win32) test C", function (assert) {
   const parsed = driveList.parse(replacedStdout[0]);
 
   assert.deepEquals(parsed, {
-    total: 998659936256,
-    used: 543257247744,
-    available: 455402688512,
-    percentageUsed: 54,
+    total: 57615052800,
+    used: 51805466524,
+    available: 5809586176,
+    percentageUsed: 90,
     mountpoint: "C:",
-    name: undefined,
+    name: "Windows10IoT",
   });
   assert.end();
 });
@@ -36,27 +36,27 @@ test("(Win32) test D", function (assert) {
   const parsed = driveList.parse(replacedStdout[1]);
 
   assert.deepEquals(parsed, {
-    total: 606087168,
-    used: 606087168,
-    available: 0,
-    percentageUsed: 100,
+    total: 69773291520,
+    used: 5852359040,
+    available: 63910932480,
+    percentageUsed: 8,
     mountpoint: "D:",
-    name: undefined,
+    name: "Data",
   });
   assert.end();
 });
-test("(Win32) test F", function (assert) {
+test("(Win32) test E", function (assert) {
   const replacedStdout = driveList.replaceStdout(stdout);
 
   const parsed = driveList.parse(replacedStdout[2]);
 
   assert.deepEquals(parsed, {
-    total: 998659936256,
-    used: 543257247744,
-    available: 455402688512,
-    percentageUsed: 54,
-    mountpoint: "F:",
-    name: "TestName",
+    total: 8011120640,
+    used: 6979813376,
+    available: 1031307264,
+    percentageUsed: 87,
+    mountpoint: "E:",
+    name: "USBSTICK",
   });
   assert.end();
 });

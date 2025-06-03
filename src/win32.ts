@@ -3,9 +3,8 @@ import { DriveDataInterface } from "./Interfaces";
 import { isNumber } from "util";
 
 export const execDriveList = (cb: any) => {
-  //Logicaldisk get order the parameters has no effect
   exec(
-    "WMIC LOGICALDISK GET Name, VolumeName, Size, FreeSpace",
+    'powershell -Command "Get-CimInstance Win32_LogicalDisk | Select-Object DeviceID, VolumeName, Size, FreeSpace | Format-Table -HideTableHeaders"',
     { windowsHide: true },
     (err, stdout) => {
       if (err) {
@@ -29,20 +28,19 @@ export const execDriveList = (cb: any) => {
 
 export const replaceStdout = (stdout: string) => {
   return stdout
-    .replace(/\r\r\n/g, "\n")
+    .replace(/\r\n/g, "\n")
     .split("\n")
-    .filter((line: string) => line.length)
-    .filter((line: string) => /^\d+$/.test(line[0]))
-    .map((line) => line.split(" ").filter((x) => x !== ""));
+    .filter((line: string) => line.trim().length)
+    .map((line) => line.trim().split(/\s{2,}/));
 };
 
 export const parse = (line: string[]): DriveDataInterface => {
-  const available = Number(line[0]);
-  const mountpoint = line[1];
+  const mountpoint = line[0];
+  const name = line[1];
   const total = Number(line[2]);
-  const name = line[3];
+  const available = Number(line[3]);
   const used = total - available;
-  const percentageUsed = Math.round((used / total) * 100);
+  const percentageUsed = total > 0 ? Math.round((used / total) * 100) : 0;
 
   return {
     total,
