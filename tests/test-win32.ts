@@ -4,7 +4,8 @@ import driveList from "../src/win32";
 const stdout =
   "C:       Windows10IoT 57615052800  5809586176\r\n" +
   "D:       Data         69773291520 63910932480\r\n" +
-  "E:       USBSTICK      8011120640  1031307264\r\n";
+  "E:       USBSTICK      8011120640  1031307264\r\n" +
+  "F:                   478847647744 208413671424\r\n";
 
 test("(Win32) replaceStdout", function (assert) {
   const replacedStdout = driveList.replaceStdout(stdout);
@@ -55,6 +56,22 @@ test("(Win32) test E", function (assert) {
     percentageUsed: 87,
     mountpoint: "E:",
     name: "USBSTICK",
+  });
+  assert.end();
+});
+
+test("(Win32) test F", function (assert) {
+  const replacedStdout = driveList.replaceStdout(stdout);
+
+  const parsed = driveList.parse(replacedStdout[2]);
+
+  assert.deepEquals(parsed, {
+    total: 478847647744,
+    used: 270433976320,
+    available: 208413671424,
+    percentageUsed: 43,
+    mountpoint: "F:",
+    name: "",
   });
   assert.end();
 });
