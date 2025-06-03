@@ -1,6 +1,6 @@
 {
   "name": "node-drivelist",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A TypeScript library to list connected drives, their usage (total, used, available space), and mount points. Supports Windows, Linux, and macOS (via POSIX compatibility). No node-gyp required.",
   "author": "Drainerlight <wraither2612@gmail.com>",
   "license": "MIT",
