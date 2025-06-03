@@ -1,5 +1,5 @@
 import test from "tape";
-import driveList from "../dist/posix";
+import driveList from "../src/posix";
 
 test("(POSIX) it parses Debian output", (assert) => {
   //'Filesystem               1K-blocks      Used Available Use% Mounted on'

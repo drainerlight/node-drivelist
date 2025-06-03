@@ -14,12 +14,19 @@ if (platform() === "win32") {
 }
 
 export const getDriveList = (): Promise<DriveDataInterface[]> => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     execDriveList(
       (
         err: ExecException | ExecFileException | null,
         driveList: DriveDataInterface[]
-      ) => resolve(driveList)
+      ) => {
+        if (err) {
+          console.error("Error retrieving drive list:", err);
+          resolve([]); // Leeres Array zurückgeben statt undefined
+        } else {
+          resolve(driveList);
+        }
+      }
     );
   });
 };
