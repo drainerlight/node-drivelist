@@ -45,12 +45,21 @@ if ((0, os_1.platform)() === "win32") {
 else if ((0, os_1.platform)() === "darwin" || (0, os_1.platform)() === "linux") {
     execDriveList = require("./posix").execDriveList;
 }
-else { // For other non-win32, non-darwin, non-linux (e.g. freebsd, sunos)
+else {
+    // For other non-win32, non-darwin, non-linux (e.g. freebsd, sunos)
     execDriveList = require("./posix").execDriveList; // Default to posix
 }
 var getDriveList = function () {
-    return new Promise(function (resolve) {
-        execDriveList(function (err, driveList) { return resolve(driveList); });
+    return new Promise(function (resolve, reject) {
+        execDriveList(function (err, driveList) {
+            if (err) {
+                console.error("Error retrieving drive list:", err);
+                resolve([]); // Leeres Array zurückgeben statt undefined
+            }
+            else {
+                resolve(driveList);
+            }
+        });
     });
 };
 exports.getDriveList = getDriveList;

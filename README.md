@@ -10,7 +10,7 @@ Inspired by [diskusage-ng](https://github.com/iximiuz/node-diskusage-ng).
 
 ## Features
 
--   **Cross-Platform Support**: Works on Windows, Linux, and macOS.
+-   **Cross-Platform Support**: Works on Windows (including Windows 10, Windows 11), Linux, and macOS.
     -   Linux and macOS support is achieved using the standard POSIX-compatible `df -kP` command and the same robust parsing logic (`src/posix.ts`).
 -   **Detailed Drive Information**: Provides total space, used space, available space, percentage used, mount point, and a derived name for each drive.
 -   **Robust POSIX Parsing**: The parser for `df` output correctly handles various output formats, including mount points with spaces and other special characters. This benefits Linux and macOS.
@@ -166,6 +166,17 @@ async function findSpecificDrive(name) {
 // findSpecificDrive('D:');               // For Windows
 // findSpecificDrive('boot');             // For a Linux system with /boot
 ```
+
+## Example Script
+
+The package includes a ready-to-use example script to demonstrate the functionality:
+
+```bash
+# Run the example script to list all drives on your system
+node examples/list-drives.js
+```
+
+This script displays a formatted list of all drives found on your system, including their mount points, names, total size, available space, used space, and usage percentage. The example works on all supported platforms (Windows, macOS, Linux) and provides a quick way to verify the library's functionality on your system.
 
 ## Building the Project
 
