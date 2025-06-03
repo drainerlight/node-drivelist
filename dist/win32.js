@@ -8,7 +8,6 @@ var execDriveList = function (cb) {
             return cb(err);
         }
         var lines = (0, exports.replaceStdout)(stdout);
-        lines.shift();
         var drives = lines.map(function (line) { return (0, exports.parse)(line); });
         try {
             cb(null, drives);

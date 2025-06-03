@@ -11,9 +11,6 @@ export const execDriveList = (cb: any) => {
       }
 
       const lines = replaceStdout(stdout);
-
-      lines.shift();
-
       const drives = lines.map((line: any) => parse(line));
 
       try {
