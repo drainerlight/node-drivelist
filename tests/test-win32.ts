@@ -1,5 +1,5 @@
 import test from "tape";
-import driveList from "../dist/win32";
+import driveList from "../src/win32";
 
 const stdout =
   "C:       Windows10IoT 57615052800  5809586176\r\n" +
@@ -8,8 +8,6 @@ const stdout =
 
 test("(Win32) replaceStdout", function (assert) {
   const replacedStdout = driveList.replaceStdout(stdout);
-
-  console.info("INFO =>replacedStdout", replacedStdout);
 
   assert.equals(replacedStdout.length, 3);
   assert.equals(replacedStdout[0][0], "C:");
@@ -23,7 +21,7 @@ test("(Win32) test C", function (assert) {
 
   assert.deepEquals(parsed, {
     total: 57615052800,
-    used: 51805466524,
+    used: 51805466624,
     available: 5809586176,
     percentageUsed: 90,
     mountpoint: "C:",
@@ -37,7 +35,7 @@ test("(Win32) test D", function (assert) {
 
   assert.deepEquals(parsed, {
     total: 69773291520,
-    used: 5852359040,
+    used: 5862359040,
     available: 63910932480,
     percentageUsed: 8,
     mountpoint: "D:",

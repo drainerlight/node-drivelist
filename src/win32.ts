@@ -1,6 +1,5 @@
 import { exec } from "child_process";
 import { DriveDataInterface } from "./Interfaces";
-import { isNumber } from "util";
 
 export const execDriveList = (cb: any) => {
   exec(
@@ -31,7 +30,14 @@ export const replaceStdout = (stdout: string) => {
     .replace(/\r\n/g, "\n")
     .split("\n")
     .filter((line: string) => line.trim().length)
-    .map((line) => line.trim().split(/\s{2,}/));
+    .map((line) => {
+      const match = line.trim().match(/^(\w:)\s+(\S+)\s+(\d+)\s+(\d+)$/);
+      if (match) {
+        return [match[1], match[2], match[3], match[4]];
+      }
+      return [];
+    })
+    .filter((parts) => parts.length > 0);
 };
 
 export const parse = (line: string[]): DriveDataInterface => {
