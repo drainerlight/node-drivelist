@@ -31,7 +31,7 @@ export const replaceStdout = (stdout: string) => {
     .split("\n")
     .filter((line: string) => line.trim().length)
     .map((line) => {
-      const match = line.trim().match(/^(\w:)\s+(\S+)\s+(\d+)\s+(\d+)$/);
+      const match = line.match(/^(\w:)\s+(\S*)\s+(\d+)\s+(\d+)$/);
       if (match) {
         return [match[1], match[2], match[3], match[4]];
       }

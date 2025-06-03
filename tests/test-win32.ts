@@ -10,9 +10,10 @@ const stdout =
 test("(Win32) replaceStdout", function (assert) {
   const replacedStdout = driveList.replaceStdout(stdout);
 
-  assert.equals(replacedStdout.length, 3);
+  assert.equals(replacedStdout.length, 4);
   assert.equals(replacedStdout[0][0], "C:");
   assert.equals(replacedStdout[2][1], "USBSTICK");
+  assert.equals(replacedStdout[3][1], "");
   assert.end();
 });
 
@@ -63,13 +64,13 @@ test("(Win32) test E", function (assert) {
 test("(Win32) test F", function (assert) {
   const replacedStdout = driveList.replaceStdout(stdout);
 
-  const parsed = driveList.parse(replacedStdout[2]);
+  const parsed = driveList.parse(replacedStdout[3]);
 
   assert.deepEquals(parsed, {
     total: 478847647744,
     used: 270433976320,
     available: 208413671424,
-    percentageUsed: 43,
+    percentageUsed: 56,
     mountpoint: "F:",
     name: "",
   });

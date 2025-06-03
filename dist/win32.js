@@ -25,7 +25,7 @@ var replaceStdout = function (stdout) {
         .split("\n")
         .filter(function (line) { return line.trim().length; })
         .map(function (line) {
-        var match = line.trim().match(/^(\w:)\s+(\S+)\s+(\d+)\s+(\d+)$/);
+        var match = line.match(/^(\w:)\s+(\S*)\s+(\d+)\s+(\d+)$/);
         if (match) {
             return [match[1], match[2], match[3], match[4]];
         }
