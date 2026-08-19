@@ -38,26 +38,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getDriveByName = exports.getDriveList = void 0;
 var os_1 = require("os");
-var execDriveList;
-if ((0, os_1.platform)() === "win32") {
-    execDriveList = require("./win32").execDriveList;
-}
-else if ((0, os_1.platform)() === "darwin" || (0, os_1.platform)() === "linux") {
-    execDriveList = require("./posix").execDriveList;
-}
-else {
-    // For other non-win32, non-darwin, non-linux (e.g. freebsd, sunos)
-    execDriveList = require("./posix").execDriveList; // Default to posix
-}
+var posix_1 = require("./posix");
+var win32_1 = require("./win32");
+var execDriveList = (0, os_1.platform)() === "win32" ? win32_1.execDriveList : posix_1.execDriveList;
 var getDriveList = function () {
     return new Promise(function (resolve, reject) {
         execDriveList(function (err, driveList) {
             if (err) {
-                console.error("Error retrieving drive list:", err);
-                resolve([]); // Leeres Array zurückgeben statt undefined
+                reject(err);
             }
             else {
-                resolve(driveList);
+                resolve(driveList || []);
             }
         });
     });
@@ -69,7 +60,7 @@ var getDriveByName = function (driveName) { return __awaiter(void 0, void 0, voi
         switch (_a.label) {
             case 0: return [4 /*yield*/, (0, exports.getDriveList)()];
             case 1:
-                driveList = (_a.sent());
+                driveList = _a.sent();
                 for (_i = 0, driveList_1 = driveList; _i < driveList_1.length; _i++) {
                     drive = driveList_1[_i];
                     if (drive.name === driveName) {
@@ -81,7 +72,3 @@ var getDriveByName = function (driveName) { return __awaiter(void 0, void 0, voi
     });
 }); };
 exports.getDriveByName = getDriveByName;
-module.exports = {
-    getDriveList: exports.getDriveList,
-    getDriveByName: exports.getDriveByName,
-};

@@ -5,15 +5,17 @@ const stdout =
   "C:       Windows10IoT 57615052800  5809586176\r\n" +
   "D:       Data         69773291520 63910932480\r\n" +
   "E:       USBSTICK      8011120640  1031307264\r\n" +
-  "F:                   478847647744 208413671424\r\n";
+  "F:                   478847647744 208413671424\r\n" +
+  "G:       New Volume   69773291520 63910932480\r\n";
 
 test("(Win32) replaceStdout", function (assert) {
   const replacedStdout = driveList.replaceStdout(stdout);
 
-  assert.equals(replacedStdout.length, 4);
+  assert.equals(replacedStdout.length, 5);
   assert.equals(replacedStdout[0][0], "C:");
   assert.equals(replacedStdout[2][1], "USBSTICK");
   assert.equals(replacedStdout[3][1], "");
+  assert.equals(replacedStdout[4][1], "New Volume");
   assert.end();
 });
 
@@ -31,6 +33,7 @@ test("(Win32) test C", function (assert) {
   });
   assert.end();
 });
+
 test("(Win32) test D", function (assert) {
   const replacedStdout = driveList.replaceStdout(stdout);
   const parsed = driveList.parse(replacedStdout[1]);
@@ -45,6 +48,7 @@ test("(Win32) test D", function (assert) {
   });
   assert.end();
 });
+
 test("(Win32) test E", function (assert) {
   const replacedStdout = driveList.replaceStdout(stdout);
 
@@ -73,6 +77,22 @@ test("(Win32) test F", function (assert) {
     percentageUsed: 56,
     mountpoint: "F:",
     name: "",
+  });
+  assert.end();
+});
+
+test("(Win32) test volume name with spaces", function (assert) {
+  const replacedStdout = driveList.replaceStdout(stdout);
+
+  const parsed = driveList.parse(replacedStdout[4]);
+
+  assert.deepEquals(parsed, {
+    total: 69773291520,
+    used: 5862359040,
+    available: 63910932480,
+    percentageUsed: 8,
+    mountpoint: "G:",
+    name: "New Volume",
   });
   assert.end();
 });

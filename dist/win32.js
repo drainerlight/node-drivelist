@@ -7,9 +7,9 @@ var execDriveList = function (cb) {
         if (err) {
             return cb(err);
         }
-        var lines = (0, exports.replaceStdout)(stdout);
-        var drives = lines.map(function (line) { return (0, exports.parse)(line); });
         try {
+            var lines = (0, exports.replaceStdout)(stdout);
+            var drives = lines.map(function (line) { return (0, exports.parse)(line); });
             cb(null, drives);
         }
         catch (e) {
@@ -24,9 +24,9 @@ var replaceStdout = function (stdout) {
         .split("\n")
         .filter(function (line) { return line.trim().length; })
         .map(function (line) {
-        var match = line.match(/^(\w:)\s+(\S*)\s+(\d+)\s+(\d+)$/);
+        var match = line.match(/^(\w:)\s*(.*?)\s+(\d+)\s+(\d+)$/);
         if (match) {
-            return [match[1], match[2], match[3], match[4]];
+            return [match[1], match[2].trim(), match[3], match[4]];
         }
         return [];
     })
@@ -50,7 +50,7 @@ var parse = function (line) {
     };
 };
 exports.parse = parse;
-module.exports = {
+exports.default = {
     execDriveList: exports.execDriveList,
     parse: exports.parse,
     replaceStdout: exports.replaceStdout,

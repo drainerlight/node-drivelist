@@ -1,7 +1,12 @@
 import { exec } from "child_process";
 import { DriveDataInterface } from "./Interfaces";
 
-export const execDriveList = (cb: any) => {
+export type DriveListCallback = (
+  err: Error | null,
+  drives?: DriveDataInterface[]
+) => void;
+
+export const execDriveList = (cb: DriveListCallback) => {
   exec(
     'powershell -Command "Get-CimInstance Win32_LogicalDisk | Select-Object DeviceID, VolumeName, Size, FreeSpace | Format-Table -HideTableHeaders"',
     { windowsHide: true },
@@ -10,31 +15,30 @@ export const execDriveList = (cb: any) => {
         return cb(err);
       }
 
-      const lines = replaceStdout(stdout);
-      const drives = lines.map((line: any) => parse(line));
-
       try {
+        const lines = replaceStdout(stdout);
+        const drives = lines.map((line: string[]) => parse(line));
         cb(null, drives);
-      } catch (e) {
+      } catch (e: any) {
         cb(e);
       }
     }
   );
 };
 
-export const replaceStdout = (stdout: string) => {
+export const replaceStdout = (stdout: string): string[][] => {
   return stdout
     .replace(/\r\n/g, "\n")
     .split("\n")
     .filter((line: string) => line.trim().length)
-    .map((line) => {
-      const match = line.match(/^(\w:)\s+(\S*)\s+(\d+)\s+(\d+)$/);
+    .map((line: string) => {
+      const match = line.match(/^(\w:)\s*(.*?)\s+(\d+)\s+(\d+)$/);
       if (match) {
-        return [match[1], match[2], match[3], match[4]];
+        return [match[1], match[2].trim(), match[3], match[4]];
       }
       return [];
     })
-    .filter((parts) => parts.length > 0);
+    .filter((parts: string[]) => parts.length > 0);
 };
 
 export const parse = (line: string[]): DriveDataInterface => {
@@ -55,7 +59,7 @@ export const parse = (line: string[]): DriveDataInterface => {
   };
 };
 
-module.exports = {
+export default {
   execDriveList,
   parse,
   replaceStdout,

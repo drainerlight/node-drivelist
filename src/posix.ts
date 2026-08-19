@@ -1,21 +1,24 @@
 import { execFile } from "child_process";
 import { DriveDataInterface } from "./Interfaces";
 
-export const execDriveList = (cb: any) => {
+export type DriveListCallback = (
+  err: Error | null,
+  drives?: DriveDataInterface[]
+) => void;
+
+export const execDriveList = (cb: DriveListCallback) => {
   execFile("df", ["-P", "-k"], (err, stdout) => {
     if (err) {
-      return err;
+      return cb(err);
     }
 
-    const lines = stdout.split("\n").filter((line: string) => line.length);
-
-    lines.shift();
-
-    const drives = lines.map((line: string) => parse(line.trim()));
-
     try {
+      const lines = stdout.split("\n").filter((line: string) => line.length);
+      lines.shift();
+
+      const drives = lines.map((line: string) => parse(line.trim()));
       cb(null, drives);
-    } catch (e) {
+    } catch (e: any) {
       cb(e);
     }
   });
@@ -36,7 +39,10 @@ export const parse = (driveLine: string): DriveDataInterface => {
   const available = Number(matches[4]);
   const percentageUsed = Number(matches[5].replace("%", ""));
   const mountpoint = matches[6].trim(); // Trim potential trailing spaces from mountpoint
-  const name = mountpoint.split("/").pop();
+  const cleanMountpoint =
+    mountpoint === "/" ? "/" : mountpoint.replace(/\/+$/, "");
+  const name =
+    cleanMountpoint === "/" ? "" : cleanMountpoint.split("/").pop() || "";
 
   return {
     total: total * 1024,
@@ -48,7 +54,7 @@ export const parse = (driveLine: string): DriveDataInterface => {
   };
 };
 
-module.exports = {
+export default {
   execDriveList,
   parse,
 };

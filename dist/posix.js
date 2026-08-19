@@ -5,12 +5,12 @@ var child_process_1 = require("child_process");
 var execDriveList = function (cb) {
     (0, child_process_1.execFile)("df", ["-P", "-k"], function (err, stdout) {
         if (err) {
-            return err;
+            return cb(err);
         }
-        var lines = stdout.split("\n").filter(function (line) { return line.length; });
-        lines.shift();
-        var drives = lines.map(function (line) { return (0, exports.parse)(line.trim()); });
         try {
+            var lines = stdout.split("\n").filter(function (line) { return line.length; });
+            lines.shift();
+            var drives = lines.map(function (line) { return (0, exports.parse)(line.trim()); });
             cb(null, drives);
         }
         catch (e) {
@@ -30,7 +30,8 @@ var parse = function (driveLine) {
     var available = Number(matches[4]);
     var percentageUsed = Number(matches[5].replace("%", ""));
     var mountpoint = matches[6].trim(); // Trim potential trailing spaces from mountpoint
-    var name = mountpoint.split("/").pop();
+    var cleanMountpoint = mountpoint === "/" ? "/" : mountpoint.replace(/\/+$/, "");
+    var name = cleanMountpoint === "/" ? "" : cleanMountpoint.split("/").pop() || "";
     return {
         total: total * 1024,
         used: used * 1024,
@@ -41,7 +42,7 @@ var parse = function (driveLine) {
     };
 };
 exports.parse = parse;
-module.exports = {
+exports.default = {
     execDriveList: exports.execDriveList,
     parse: exports.parse,
 };
