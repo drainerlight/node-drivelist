@@ -1,38 +1,32 @@
 import { platform } from "os";
 import { DriveDataInterface } from "./Interfaces";
-import { ExecException, ExecFileException } from "child_process";
+import { execDriveList as posixExecDriveList } from "./posix";
+import { execDriveList as win32ExecDriveList } from "./win32";
 
-let execDriveList: any;
+export type DriveListCallback = (
+  err: Error | null,
+  drives?: DriveDataInterface[]
+) => void;
 
-if (platform() === "win32") {
-  execDriveList = require("./win32").execDriveList;
-} else if (platform() === "darwin" || platform() === "linux") {
-  execDriveList = require("./posix").execDriveList;
-} else {
-  // For other non-win32, non-darwin, non-linux (e.g. freebsd, sunos)
-  execDriveList = require("./posix").execDriveList; // Default to posix
-}
+const execDriveList: (cb: DriveListCallback) => void =
+  platform() === "win32" ? win32ExecDriveList : posixExecDriveList;
 
 export const getDriveList = (): Promise<DriveDataInterface[]> => {
   return new Promise((resolve, reject) => {
-    execDriveList(
-      (
-        err: ExecException | ExecFileException | null,
-        driveList: DriveDataInterface[]
-      ) => {
-        if (err) {
-          console.error("Error retrieving drive list:", err);
-          resolve([]); // Leeres Array zurückgeben statt undefined
-        } else {
-          resolve(driveList);
-        }
+    execDriveList((err, driveList) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(driveList || []);
       }
-    );
+    });
   });
 };
 
-export const getDriveByName = async (driveName: string) => {
-  const driveList = (await getDriveList()) as DriveDataInterface[];
+export const getDriveByName = async (
+  driveName: string
+): Promise<DriveDataInterface | null> => {
+  const driveList = await getDriveList();
 
   for (const drive of driveList) {
     if (drive.name === driveName) {
@@ -41,9 +35,4 @@ export const getDriveByName = async (driveName: string) => {
   }
 
   return null;
-};
-
-module.exports = {
-  getDriveList,
-  getDriveByName,
 };

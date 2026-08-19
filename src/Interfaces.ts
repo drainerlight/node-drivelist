@@ -4,5 +4,5 @@ export interface DriveDataInterface {
   available: number;
   percentageUsed: number;
   mountpoint: string;
-  name: string | undefined;
+  name: string;
 }
